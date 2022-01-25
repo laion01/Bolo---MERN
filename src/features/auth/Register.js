@@ -1,6 +1,55 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  attemptRegister,
+  attemptResendConfirmation,
+  attemptResetRegister,
+} from "app/thunks/auth";
 
 export default function Register() {
+  const { isAuth } = useSelector((state) => state.user);
+  const [serverError, setServerError] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [registerStep, setRegisterStep] = useState("register"); // Use an enum with TS;
+
+  const dispatch = useDispatch();
+
+  const onSubmit = () => {
+    console.log({email, username, password})
+    dispatch(attemptRegister({email, username, password}))
+      .then(() => {
+        // setEmail(email);
+        setRegisterStep("resend");
+      })
+      .catch((error) => {
+        if (error.response) {
+          setServerError(error.response.data.message);
+        }
+      });
+  };
+
+  const onResendEmail = () => {
+    dispatch(attemptResendConfirmation(email))
+      .then(() => {
+        setRegisterStep("reset");
+      })
+      .catch((error) => {
+        if (error.response) {
+          setServerError(error.response.data.message);
+        }
+      });
+  };
+
+  const onReset = () => {
+    dispatch(attemptResetRegister(email)).catch((error) => {
+      if (error.response) {
+        setServerError(error.response.data.message);
+      }
+    });
+  };
+
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -54,7 +103,7 @@ export default function Register() {
                     <input
                       type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Name"
+                      placeholder="Name" value={username} onChange={(e) => setUsername(e.target.value)}
                     />
                   </div>
 
@@ -68,7 +117,7 @@ export default function Register() {
                     <input
                       type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Email"
+                      placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
 
@@ -82,7 +131,7 @@ export default function Register() {
                     <input
                       type="password"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Password"
+                      placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
 
@@ -109,7 +158,7 @@ export default function Register() {
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
+                      type="button" onClick={onSubmit}
                     >
                       Create Account
                     </button>

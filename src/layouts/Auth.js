@@ -24,9 +24,9 @@ export default function Auth() {
             // }}
           ></div>
           <Routes>
-            <Route path="/auth/login" exact element={<Login/>} />
-            <Route path="/auth/register" exact element={<Register/>} />
-            <Navigate from="/auth" to="/auth/login" />
+            <Route path="/login" exact element={<Login/>} />
+            <Route path="/register" exact element={<Register/>} />
+            <Route path="/*" element={<Navigate to="/login" />} />
           </Routes>
           <FooterSmall absolute />
         </section>

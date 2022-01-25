@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import UserDropdown from "components/Dropdowns/UserDropdown.js";
 
@@ -9,13 +10,29 @@ export default function Navbar() {
       <nav className="absolute top-0 left-0 w-full z-10 bg-transparent md:flex-row md:flex-nowrap md:justify-start flex items-center p-4">
         <div className="w-full mx-autp items-center flex justify-between md:flex-nowrap flex-wrap md:px-10 px-4">
           {/* Brand */}
-          <a
-            className="text-white text-sm uppercase hidden lg:inline-block font-semibold"
-            href="#pablo"
-            onClick={(e) => e.preventDefault()}
-          >
-            Dashboard
-          </a>
+          
+          <ul className="flex flex-col lg:flex-row list-none">
+            <li className="flex items-left">
+              <Link
+                to="/admin/dashboard"
+                className={
+                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+                }
+              >
+                Dashboard
+              </Link>
+            </li>
+            <li className="flex items-left ml-8">
+              <Link
+                to="/admin/users"
+                className={
+                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+                }
+              >
+                Uses
+              </Link>
+            </li>
+          </ul>
           {/* Form */}
           <form className="md:flex hidden flex-row flex-wrap items-center lg:ml-auto mr-3">
             <div className="relative flex w-full flex-wrap items-stretch">

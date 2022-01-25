@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { attemptLogin } from "app/thunks/auth";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
-  return (
+  const { isAuth } = useSelector((state) => state.user);
+  const [serverError, setServerError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+
+  const initialValues = {
+    username: "",
+    password: "",
+  };
+
+  const onSubmit = (values) => {
+    dispatch(attemptLogin({username: email, password: password})).catch(({ response }) => {
+      if (response.data.message) {
+        setServerError(response.data.message);
+      }
+    });
+  };
+
+  return isAuth ? (
+    <Navigate to="/"/>
+  ) : (
     <>
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
@@ -55,7 +80,7 @@ export default function Login() {
                     <input
                       type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Email"
+                      placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
 
@@ -69,7 +94,7 @@ export default function Login() {
                     <input
                       type="password"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Password"
+                      placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                   <div>
@@ -88,7 +113,7 @@ export default function Login() {
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                      type="button"
+                      type="button" onClick={onSubmit}
                     >
                       Sign In
                     </button>

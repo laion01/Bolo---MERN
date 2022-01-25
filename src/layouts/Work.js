@@ -13,7 +13,7 @@ export default function Work() {
           <Routes>
             <Route path="/apply" element={<ApplyForJobs/>} />
             <Route path="/hire" element={<HireDevelopers/>} />
-            <Route path="/*" element={<Navigate to="/work/apply" />} />
+            <Route path="/*" element={<Navigate to="/apply" />} />
           </Routes>
         </div>
       </div>
