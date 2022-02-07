@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Radio, RadioGroup, FormControl, FormControlLabel } from '@material-ui/core';
+import { setAnswer, setCurrentAnswer } from "app/actions/devtype";
 // components
 const Checkbox = props => (
     <input type="radio" name="problem" />
 )
 
-export default function CardProblem({q, c, w, checks, v}) {
+
+export default function CardProblem({q, c, w, checks, value}) {
+  const { problem_index, values } = useSelector((state) => state.devtype);
+  const dispatch = useDispatch();
+
+  const onValueChange = (v) => {
+    dispatch(setAnswer(problem_index, v));
+    dispatch(setCurrentAnswer(v));
+  };
+
   return (
     <>
     <div className="lg:w-9/12">
@@ -31,15 +42,16 @@ export default function CardProblem({q, c, w, checks, v}) {
             </div>
         </div>
         <div className="mb-12 px-12">
+            <p> {value} </p>
             <FormControl component="fieldset">
                 <RadioGroup
                     aria-label="question"
                     name="controlled-radio-buttons-group"
-                    value={v}
+                    value={values[problem_index]} onChange={(e) => onValueChange(e.target.value)}
                     >
                     { 
-                        checks.map(each => (
-                            <FormControlLabel value={each.text} control={<Radio/>} label={each.text} />
+                        checks.map((each, index) => (
+                            <FormControlLabel key={index} value={each.text} control={<Radio/>} label={each.text} />
                         ))
                     }
                 </RadioGroup>

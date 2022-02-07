@@ -235,7 +235,7 @@ router.post("/register", async (req, res) => {
     return res.status(400).send({ message: "Email already registered. Take an another email" });
 
   // Create new user
-  user = new User(req.body);
+  user = new User({...req.body, isVerified: true});
 
   // Hash password
   user.hashPassword().then(() => {

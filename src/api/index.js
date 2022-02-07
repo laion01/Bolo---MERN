@@ -8,6 +8,7 @@ const postRegister = (user) => http.post("/auth/register", user);
 const getConfirmation = (token) => http.get(`/auth/confirmation/${token}`);
 const resendConfirmation = (email) => http.post("/auth/resend", { email });
 const resetRegister = (email) => http.post("/auth/register/reset", { email });
+const addCompany = (company) => http.post("/work/addCompany", { company });
 const getUser = () => http.get("/user");
 
 export {
@@ -20,4 +21,5 @@ export {
   resendConfirmation,
   getUser,
   resetRegister,
+  addCompany
 };

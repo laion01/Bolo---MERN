@@ -3,14 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { attemptLogin } from "app/thunks/auth";
 import { Navigate } from "react-router-dom";
+import { ReactSession } from 'react-client-session';
 
 export default function Login() {
-  const { isAuth } = useSelector((state) => state.user);
+  const { isAuth, isAdmin } = useSelector((state) => state.user);
   const [serverError, setServerError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
+  ReactSession.setStoreType("localStorage");
 
   const initialValues = {
     username: "",
@@ -18,7 +20,11 @@ export default function Login() {
   };
 
   const onSubmit = (values) => {
-    dispatch(attemptLogin({username: email, password: password})).catch(({ response }) => {
+    dispatch(attemptLogin({username: email, password: password}))
+    .then((data) => {
+      console.log(data);
+    })
+    .catch(({ response }) => {
       if (response.data.message) {
         setServerError(response.data.message);
       }
@@ -109,7 +115,9 @@ export default function Login() {
                       </span>
                     </label>
                   </div>
-
+                  <div className="text-red-400 text-center mb-3 font-bold">
+                    <small>{serverError}</small>
+                  </div>
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"

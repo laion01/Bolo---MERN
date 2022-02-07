@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Navigate } from "react-router-dom";
 import {
   attemptRegister,
   attemptResendConfirmation,
@@ -7,7 +8,7 @@ import {
 } from "app/thunks/auth";
 
 export default function Register() {
-  const { isAuth } = useSelector((state) => state.user);
+  const { isAuth, isAdmin } = useSelector((state) => state.user);
   const [serverError, setServerError] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -21,7 +22,9 @@ export default function Register() {
     dispatch(attemptRegister({email, username, password}))
       .then(() => {
         // setEmail(email);
-        setRegisterStep("resend");
+        // setRegisterStep("resend");
+        setServerError("");
+        alert('Successfuly registered!')
       })
       .catch((error) => {
         if (error.response) {
@@ -50,7 +53,9 @@ export default function Register() {
     });
   };
 
-  return (
+  return isAuth ? (
+    isAdmin ? (<Navigate to="/admin/users"/>) : (<Navigate to="/"/>)
+  ) : (
     <>
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
@@ -154,7 +159,9 @@ export default function Register() {
                       </span>
                     </label>
                   </div>
-
+                  <div className="text-red-400 text-center mb-3 font-bold">
+                    <small>{serverError}</small>
+                  </div>
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"

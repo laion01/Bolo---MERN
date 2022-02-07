@@ -1,20 +1,36 @@
 import React, {useState} from "react";
-
-
+import { useDispatch, useSelector } from "react-redux";
+import ReactSession from 'react-client-session';
 import CardProblem from "components/Cards/CardProblem.js";
 import ConnectMe from "./ConnectMe.js";
+import { setAnswer, setCurrentAnswer, setProblemIndex } from "app/actions/devtype";
+import { current } from "@reduxjs/toolkit";
 
 export default function HireDevelopers() {
+  const { values, currentValue } = useSelector((state) => state.devtype);
+  const {user, isAuth, isAdmin} = useSelector((state) => state.user);
     const [index, setIndex] = useState(0);
+
+    const dispatch = useDispatch();
+
     const nextQuestion = () => {
       // if(index + 1 === problems.length)
       //   return
+      if(index + 1  < problems.length) {
+        dispatch(setProblemIndex(index+1));
+        dispatch(setCurrentAnswer(values[index+1]));
+      }
       setIndex(index+1)
+      
     }
     const prevQuestion = () => {
       if(index === 0)
         return 
+        
+      dispatch(setProblemIndex(index-1));
+      dispatch(setCurrentAnswer(values[index-1]));
       setIndex(index-1)
+      
     }
   return (
     <>
@@ -37,6 +53,7 @@ export default function HireDevelopers() {
                                 className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                                 type="button"
                                 onClick={() => nextQuestion()}
+                                disabled={!currentValue.length}
                               > Next </button>
                             </div>
                           : <div className="py-6 px-3 mt-32 sm:mt-0">
@@ -44,6 +61,7 @@ export default function HireDevelopers() {
                                 className="bg-lightBlue-500 active:bg-lightBlue-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                                 type="button"
                                 onClick={() => nextQuestion()}
+                                disabled={!currentValue.length}
                               > Get Started </button>
                             </div>
                         }
@@ -70,7 +88,6 @@ export default function HireDevelopers() {
                 :
                   <ConnectMe/>
               }
-              
             </div>
           </div>
         </section>
@@ -90,8 +107,7 @@ const problems = [
             {text : "Project Managers", comment : "Digital Project managers, IT project Managers, Scrum Masters, and Angile Coaches"},
             {text : "Product Managers", comment : "Digital Product Managers, Product Owners, and Business Analysts" },
             {text : "Finance Experts", comment : "Financial Modelers, Fundraising Advisors, M&A and FP&A Experts" }
-        ],
-        value: 0
+        ]
     },
     {
         q: "How many people are employed at your company?",
@@ -104,8 +120,7 @@ const problems = [
             {text : "201 - 1000", comment : "" },
             {text : "10001 - 5000", comment : "" },
             {text : "More than 5000", comment : "" },
-        ],
-        value: 0
+        ]
     },
     {
       q: "What type of project are you hiring for?",
@@ -116,8 +131,7 @@ const problems = [
           {text : "Existing project that needs more resources", comment : "" },
           {text : "Ongoing assistance or consultation", comment : "" },
           {text : "None of the above, I'm just looking to learn more about Bolo.", comment : "" },
-      ],
-      value: 0
+      ]
     },
     {
       q: "Do you have product specifications ready?",
@@ -127,8 +141,7 @@ const problems = [
           {text : "I have a rough idea of what I want to build", comment : "" },
           {text : "I have a clear idea of what I want to build, but I do not have written specifications and/or wireframes", comment : "" },
           {text : "I have clear written specifications and/or wireframes", comment : "" },
-      ],
-      value: 0
+      ]
     },
     {
       q: "How long do you need the developer?",
@@ -141,8 +154,7 @@ const problems = [
           {text : "3 to 6 months", comment : "" },
           {text : "Longer than 6 months", comment : "" },
           {text : "I will decide later", comment : "" },
-      ],
-      value: 0
+      ]
     },
     {
       q: "What level of time commitment will you require from the developer?",
@@ -153,8 +165,7 @@ const problems = [
           {text : "Par time (less than 40 hrs/week)", comment : "" },
           {text : "Hourly", comment : "" },
           {text : "I will decide later", comment : "" },
-      ],
-      value: 0
+      ]
     },
     {
       q: "When do you need the developer to start?",
@@ -165,8 +176,7 @@ const problems = [
           {text : "In 1 to 2 weeks", comment : "" },
           {text : "More than 2 weeks from now", comment : "" },
           {text : "I will decide later", comment : "" },
-      ],
-      value: 0
+      ]
     },
     {
       q: "Are you open to working with a remote developer?",
@@ -176,8 +186,7 @@ const problems = [
           {text : "Yes", comment : "" },
           {text : "No", comment : "" },
           {text : "I'm not sure", comment : "" },
-      ],
-      value: 0
+      ]
     },
     {
       q: "What level of team comtribution are you looking from the developer?",
@@ -189,8 +198,7 @@ const problems = [
           {text : "Senior Individual Contributor", comment : "" },
           {text : "Mid-Level Management", comment : "" },
           {text : "Executive / Senior Leadership", comment : "" },
-      ],
-      value: 0
+      ]
     },
     {
       q: "What is your budget for this role?",
@@ -202,7 +210,6 @@ const problems = [
           {text : "$90 - $110/hr", comment : "" },
           {text : "More than $110/hr", comment : "" },
           {text : "Not sure on budget yet", comment : "" },
-      ],
-      value: 0
+      ]
     }
 ]
